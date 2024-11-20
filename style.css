@@ -1,0 +1,34 @@
+body{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+#myCanvas{
+
+    border: 1px solid black;
+}
+
+.label{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: bisque;
+}
+button{
+    margin-top: 7px;
+    margin-bottom: 7px;
+    padding: 5px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    border-radius: 20px;
+}
+.button_on{
+    background-color: lightgreen;
+}
+
+select {
+    margin-top: 14px;
+    padding: 5px;
+    background-color: aquamarine;
+    border-radius: 20px;
+}
+
+option{
+    background-color:aquamarine;
+}
