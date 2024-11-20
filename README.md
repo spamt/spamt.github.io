@@ -1,0 +1,2 @@
+# pentalearn
+Learn the pentatonic
