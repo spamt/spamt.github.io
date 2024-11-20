@@ -1,2 +1,4 @@
 # pentalearn
-Learn the pentatonic
+Learn the pentatonic scale.
+
+More details to be added soon.
