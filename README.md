@@ -1,4 +1,3 @@
-# pentalearn
-Learn the pentatonic scale.
+Saving various small project I do for education and fun. 
 
-More details to be added soon.
+This is also to learn github.
