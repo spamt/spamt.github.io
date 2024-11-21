@@ -2,6 +2,9 @@ const canvas = document.getElementById('myCanvas')
 const c = canvas.getContext('2d')
 const frets = []
 
+const modal = document.getElementById('modal')
+const buttonCreateSixStrings = document.getElementById('buttonCreateSixStrings')
+const buttonCreateEightStrings = document.getElementById('buttonCreateEightStrings')
 
 // Constants
 const notes = ['a','a#','b','c','c#','d','d#','e','f','f#','g','g#']
@@ -11,7 +14,9 @@ let whatIntervalIsPositionedWhenClicking = 'root'
 const nutPositionHorizontal = 20
 const fretDistance = 50
 const fretThickness = 1
+const fretOverhang = 5
 const nutThickness = 3
+const nutOverhang = 15
 const markLineThickness = 1
 const markRadius = 10
 const noteFont =  "11px verdana";
@@ -24,8 +29,8 @@ const intervalOverlayOffset = {
     y: 3
 }
 // colours
-const noteColour = 'rgba(120,120,120,0.7)'
-const fretColour = 'rgba(200,200,200,0.8)'
+const noteColour = 'rgba(120,120,120,0.8)'
+const fretColour = 'rgba(150,150,150,0.8)'
 const markColour = 'rgba(12,12,12,0.4)'
 const ghostColour = 'rgba(12,12,12,0.1)'
 const invtervalColours = {
@@ -156,6 +161,23 @@ select.addEventListener('change', ()=>{
     //ckhere
     whatIntervalIsPositionedWhenClicking = select.options[select.selectedIndex].textContent
 })
+
+
+/// create guitar button
+buttonCreateSixStrings.addEventListener('click',()=>{
+    setupGuitar(false)
+    removeModal()
+})
+
+buttonCreateEightStrings.addEventListener('click',()=>{
+    setupGuitar(true)
+    removeModal()
+})
+
+function removeModal(){
+    modal.remove()
+}
+
 //#endregion
 
 
@@ -365,8 +387,12 @@ class Guitar{
 }
 
 class String{
-    constructor({pitch, thickness = 2}){
-        guitar.strings.push(this)
+    constructor({pitch, thickness = 2, addToBottom = false}){
+        if (!addToBottom){
+            guitar.strings.push(this)
+        } else {
+            guitar.strings.unshift(this)
+        }
         this.pitch = pitch
         this.thickness = thickness
         this.start = {
@@ -397,11 +423,11 @@ class Fret{
         this.number = number
         this.start = {
             x: nutPositionHorizontal + fretDistance * this.number,
-            y: 10, 
+            y: guitar.strings[guitar.strings.length-1].start.y - fretOverhang, 
         }
         this.end = {
             x: this.start.x, 
-            y: canvas.height-10
+            y: guitar.strings[0].start.y + fretOverhang, 
         }
 
 
@@ -469,8 +495,8 @@ class Nut extends Fret{
     draw(){
         c.lineWidth = nutThickness
         c.beginPath()
-        c.moveTo(this.start.x, this.start.y)
-        c.lineTo(this.end.x, this.end.y)
+        c.moveTo(this.start.x, this.start.y - nutOverhang)
+        c.lineTo(this.end.x, this.end.y + nutOverhang)
         c.stroke()
     }
 
@@ -568,23 +594,31 @@ const guitar = new Guitar()
 //     const num = (i * 5) % 12
 //     new String({pitch: notes[num]})
 // }
-const string_fsharp = new String({pitch: 'f#'})
-const string_blow = new String({pitch: 'b'})
-const string_e = new String({pitch: 'e'})
-const string_a = new String({pitch: 'a'})
-const string_d = new String({pitch: 'd'})
-const string_g = new String({pitch: 'g'})
-const string_b = new String({pitch: 'b'})
-const string_ehigh = new String({pitch: 'e'})
-guitar.placeStrings()
 
-// create nut and frets
-const nut = new Nut()
-for (let i = 1; i < 13; i++){
-    const fret = new Fret(i)
+let nut
+function setupGuitar(extraStrings){
+    if (extraStrings){
+        const string_fsharp = new String({pitch: 'f#'})
+        const string_blow = new String({pitch: 'b'})
+    }
+    const string_e = new String({pitch: 'e', thickness: 4})
+    const string_a = new String({pitch: 'a', thickness: 3})
+    const string_d = new String({pitch: 'd', thickness: 3})
+    const string_g = new String({pitch: 'g', thickness: 2})
+    const string_b = new String({pitch: 'b', thickness: 2})
+    const string_ehigh = new String({pitch: 'e', thickness: 1})
+    guitar.placeStrings()
+
+    // create nut and frets
+    nut = new Nut()
+    for (let i = 1; i < 13; i++){
+        const fret = new Fret(i)
+    }
+
+    // create the scale
+    guitar.createScale()
+
+    guitar.refreshScreen()
 }
 
-// create the scale
-guitar.createScale()
 
-guitar.refreshScreen()
